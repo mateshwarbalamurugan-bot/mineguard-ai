@@ -62,6 +62,9 @@ app.use('/api', authMiddleware, sharingRoutes);
 const distPath = path.join(__dirname, '../frontend/dist');
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
+  app.get('/tessel', (req, res) => {
+    res.sendFile(path.join(distPath, 'tessel.html'));
+  });
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) {
       return next();
