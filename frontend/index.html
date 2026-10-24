@@ -13,7 +13,37 @@
     <meta property="og:description" content="Fast, private notes workspace with AI writing assistant, PIN protection, voice transcription, and smart reminders." />
     <meta property="og:image" content="/og-preview.png" />
     <!-- Favicon SVG -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2318181b'><path d='M3 4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4zm3 2v2h12V6H6zm0 4v2h12v-2H6zm0 4v2h8v-2H6z'/></svg>" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233A4BFF'><path d='M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h4v4H7V7zm6 0h4v10h-4V7zm-6 6h4v4H7v-4z'/></svg>" />
+    <!-- Google Fonts: DM Sans variable + Instrument Serif italic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN with Tessel architectural palette -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              paper: '#F3EFE6',
+              panel: '#E9E4D8',
+              ink: '#1B1D22',
+              muted: '#77746C',
+              cobalt: '#3A4BFF',
+              hairline: 'rgba(27,29,34,0.12)',
+              'cobalt-glow': 'rgba(58,75,255,0.12)',
+            },
+            fontFamily: {
+              sans: ['"DM Sans"', 'sans-serif'],
+              serif: ['"Instrument Serif"', 'serif'],
+            },
+            lineHeight: {
+              tightest: '0.95',
+            }
+          }
+        }
+      };
+    </script>
   </head>
   <body>
     <div id="app"></div>
