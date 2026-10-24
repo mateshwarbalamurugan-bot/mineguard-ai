@@ -1,6 +1,7 @@
 <script setup>
-import { ref, watch, computed, inject } from 'vue';
+import { ref, watch, computed, inject, onUnmounted } from 'vue';
 import { api } from '../api.js';
+import { createCollabClient } from '../collab.js';
 
 const props = defineProps({
   editingNote: { type: Object, default: null },
@@ -48,6 +49,50 @@ const aiBefore = ref('');
 const aiAfter = ref('');
 const aiError = ref('');
 
+// Collab state
+const collabOnlineUsers = ref([]);
+const collabStatus = ref('');
+let collabClient = null;
+
+function setupCollab(note) {
+  if (collabClient) {
+    collabClient.destroy();
+    collabClient = null;
+    collabOnlineUsers.value = [];
+    collabStatus.value = '';
+  }
+
+  if (note && note.id && (note.type || 'text') === 'text') {
+    collabClient = createCollabClient({
+      noteId: note.id,
+      token: api.getToken(),
+      onTextChange: (newBody) => {
+        form.value.body = newBody;
+      },
+      onPresenceChange: (users) => {
+        collabOnlineUsers.value = users;
+      },
+      onStatusChange: (status) => {
+        collabStatus.value = status;
+      },
+    });
+  }
+}
+
+function handleBodyInput(e) {
+  form.value.body = e.target.value;
+  if (collabClient) {
+    collabClient.updateText(form.value.body);
+  }
+}
+
+onUnmounted(() => {
+  if (collabClient) {
+    collabClient.destroy();
+    collabClient = null;
+  }
+});
+
 // Populate form when editingNote changes
 watch(
   () => props.editingNote,
@@ -73,6 +118,7 @@ watch(
         checklistItems.value = [];
       }
       existingAttachments.value = note.attachments || [];
+      setupCollab(note);
     } else {
       resetForm();
     }
@@ -84,6 +130,12 @@ watch(
 );
 
 function resetForm() {
+  if (collabClient) {
+    collabClient.destroy();
+    collabClient = null;
+    collabOnlineUsers.value = [];
+    collabStatus.value = '';
+  }
   form.value = {
     title: '',
     body: '',
@@ -154,6 +206,7 @@ function toggleSpeech() {
         checklistItems.value.push({ id: Date.now().toString(), text: transcript.trim(), done: false });
       } else {
         form.value.body = form.value.body ? form.value.body + ' ' + transcript : transcript;
+        if (collabClient) collabClient.updateText(form.value.body);
       }
     };
 
@@ -295,6 +348,7 @@ function acceptAllTags() {
 function insertAIResultAtEnd() {
   if (typeof aiResult.value === 'string') {
     form.value.body = form.value.body ? form.value.body + '\n\n' + aiResult.value : aiResult.value;
+    if (collabClient) collabClient.updateText(form.value.body);
     showToast('Inserted into note body', 'success');
     aiPanelOpen.value = false;
   }
@@ -303,6 +357,7 @@ function insertAIResultAtEnd() {
 function replaceAIResult() {
   if (typeof aiResult.value === 'string') {
     form.value.body = aiResult.value;
+    if (collabClient) collabClient.updateText(form.value.body);
     showToast('Note body replaced', 'success');
     aiPanelOpen.value = false;
   }
@@ -387,7 +442,23 @@ async function onSubmit() {
     <form class="card form-card" @submit.prevent="onSubmit">
       <!-- Top Title and Type Toggle -->
       <div class="row space-between form-header">
-        <h2>{{ editingNote ? 'Edit Note' : 'Create New Note' }}</h2>
+        <div class="row" style="gap: 10px;">
+          <h2>{{ editingNote ? 'Edit Note' : 'Create New Note' }}</h2>
+          <!-- Colored Online Avatars -->
+          <div v-if="collabOnlineUsers.length > 0" class="collab-avatars-strip" title="Live Collaboration">
+            <span :class="['collab-status-dot', collabStatus]" :title="`Status: ${collabStatus}`"></span>
+            <div
+              v-for="u in collabOnlineUsers"
+              :key="u.id"
+              class="collab-avatar"
+              :style="{ backgroundColor: u.color || '#2563eb' }"
+              :title="`${u.name} (${u.canEdit ? 'Can Edit' : 'Read Only'})`"
+            >
+              {{ (u.name || '?').charAt(0).toUpperCase() }}
+            </div>
+          </div>
+        </div>
+
         <div class="row" style="gap: 6px;">
           <button
             type="button"
@@ -512,11 +583,16 @@ async function onSubmit() {
       <!-- Text Mode: Textarea -->
       <div v-if="form.type === 'text'">
         <textarea
-          v-model="form.body"
+          :value="form.body"
+          @input="handleBodyInput"
           rows="5"
           placeholder="Write your note body (Markdown supported)..."
           maxlength="100000"
+          :disabled="collabStatus === 'read-only'"
         ></textarea>
+        <div v-if="collabStatus === 'read-only'" class="text-muted" style="font-size: 0.8rem; margin-top: 4px;">
+          🔒 You have read-only access to this shared note.
+        </div>
       </div>
 
       <!-- Checklist Mode: Items list -->
@@ -1074,6 +1150,48 @@ async function onSubmit() {
   margin-top: 8px;
   border-top: 1px solid var(--card-border);
   padding-top: 8px;
+}
+
+.collab-avatars-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--input-bg);
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid var(--card-border);
+}
+
+.collab-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.collab-status-dot.connected {
+  background: var(--success);
+}
+
+.collab-status-dot.reconnecting {
+  background: var(--warning);
+}
+
+.collab-status-dot.read-only {
+  background: var(--danger);
+}
+
+.collab-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 800px) {

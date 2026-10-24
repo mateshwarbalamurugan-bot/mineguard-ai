@@ -16,11 +16,16 @@ const aiRoutes = require('./routes/ai');
 const sharingRoutes = require('./routes/sharing');
 const publicRoutes = require('./routes/public');
 
+const http = require('http');
 const { authMiddleware } = require('./middleware/auth');
 const { authRateLimit } = require('./middleware/authRateLimit');
 const { startReminderJob } = require('./services/reminderService');
+const { initCollabServer } = require('./services/collabServer');
 
 const app = express();
+const server = http.createServer(app);
+initCollabServer(server);
+app.server = server;
 const PORT = process.env.PORT || 3001;
 
 // ---------- Security Middleware ----------
@@ -76,7 +81,7 @@ app.use((err, req, res, next) => {
 // ---------- Start (skip when required by tests) ----------
 if (require.main === module) {
   startReminderJob();
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Notes Board API & Web App running at http://localhost:${PORT}`);
   });
 }

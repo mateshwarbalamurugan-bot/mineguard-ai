@@ -110,3 +110,5 @@ For every change:
 - [x] v3.0 — AI Assistant (Gemini/OpenAI/Anthropic/Mock, summarize, auto-tag, improve text, ask your notes command palette)
 - [x] v3.1 — Production Landing Page & SPA Architecture (Landing at `/`, Board at `/app`, Public share at `/s/:token`)
 - [x] v3.2 — Production deployment & single-process serving (`frontend/dist` served by Express, Dockerfile, Render/Railway guide)
+- [x] v3.3 — Real-time collaboration (Yjs + WebSockets at `/ws` behind `COLLAB_ENABLED` flag, server-enforced read-only, 2s idle SQLite ydoc persistence, colored online presence avatars)
+

@@ -36,6 +36,13 @@ A fast, private, Notion-style notes workspace built with **Vue 3**, **Vite**, **
   - Generate cryptographically secure 32-byte hex share links (`/s/:token`).
   - Read-only reader view that strictly leaks **zero** owner data.
   - Public reader comments with rate limiting; note owner can moderate and delete comments.
+- **Real-Time Collaboration (Yjs + WebSockets)**:
+  - Collaborative multi-user editing for text notes behind the `COLLAB_ENABLED` environment flag.
+  - Room per note at `/ws` with automatic conflict resolution powered by **Yjs CRDT** (`Y.Doc`, `Y.Text`).
+  - Strict server-enforced access control: JWT owners and can-edit share tokens enjoy write access; read-only share viewers are restricted at the protocol level.
+  - Debounced SQLite persistence: ydoc state is saved to `note_collab` and mirrored to `notes.body` after 2 seconds of inactivity (and on final disconnect).
+  - Colored presence avatars showing who is online with real-time status indicators.
+  - Automatic exponential backoff reconnection for resilient editing.
 - **Design System & Accessibility**:
   - Warm paper minimalist aesthetic with Light (`#f4f1eb`) and Dark (`#121214`) themes.
   - Strict WCAG AA contrast compliance (≥ 4.5:1 text contrast).
@@ -114,7 +121,7 @@ npm run dev
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### 3. Running the Automated Test Suite
-Run all 11 test suites (71 tests covering auth, multi-tenant isolation, locks, reminders, AI, uploads, shares, exports, and production serving):
+Run all 12 test suites (81 tests covering auth, multi-tenant isolation, locks, reminders, AI, uploads, shares, exports, real-time collaboration, and production serving):
 ```bash
 npm test
 ```
@@ -145,6 +152,7 @@ Copy `.env.example` to `.env` or set these in your hosting environment:
 | `AI_PROVIDER` | `mock` | AI engine: `gemini`, `openai`, `anthropic`, or `mock` |
 | `AI_API_KEY` | `""` | API key for Gemini / OpenAI / Anthropic |
 | `AI_MODEL` | Provider default | Model override (e.g. `gemini-1.5-flash`, `gpt-4o-mini`) |
+| `COLLAB_ENABLED` | `true` | Enable or disable real-time Yjs collaboration (`true` or `false`) |
 
 ---
 
@@ -169,6 +177,9 @@ Copy `.env.example` to `.env` or set these in your hosting environment:
 - `PATCH /api/notes/reorder` — Batch update note positions.
 - `GET /api/stats` — Workspace counts (total, active, folders, tags).
 - `GET /api/tags` — Aggregated tags with counts.
+
+### Real-Time Collaboration (WebSocket)
+- `ws://host/ws?noteId=<id>&token=<jwt>&shareToken=<token>` — Real-time collaborative room for text notes. Server transmits binary Yjs state updates (`sync-init`, `doc-update`) and presence synchronization (`presence-sync`). Rejects non-text, trashed, or locked notes.
 
 ### Privacy PIN Lock
 - `POST /api/notes/:id/lock` — Set 4–8 digit PIN to lock note.
