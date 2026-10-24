@@ -14,6 +14,7 @@ function cleanTags(tags) {
     .split(',')
     .map((t) => t.trim().toLowerCase())
     .filter(Boolean)
+    .sort()
     .join(',');
 }
 
