@@ -1,14 +1,17 @@
 'use strict';
-const { describe, it, before } = require('node:test');
+const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const request = require('supertest');
 
 process.env.DB_PATH = ':memory:';
 
 const app = require('../server');
+const db = require('../db');
 
 describe('Notes API Comprehensive Suite', () => {
   let token;
+
+  
 
   before(async () => {
     const res = await request(app)

@@ -1,17 +1,20 @@
 'use strict';
-const { describe, it, before } = require('node:test');
+const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const request = require('supertest');
 
 process.env.DB_PATH = ':memory:';
 
 const app = require('../server');
+const db = require('../db');
 
 describe('Multi-User Resource Isolation', () => {
   let userAToken;
   let userBToken;
   let noteAId;
   let folderAId;
+
+  
 
   before(async () => {
     // Register User A

@@ -102,10 +102,11 @@ For every change:
 ## Roadmap
 
 - [x] v1.0 — Core CRUD notes board (title, body, tags, search, filter)
-- [ ] v1.1 — Rich text editor (TipTap / ProseMirror)
-- [ ] v1.2 — File / image attachments (multipart upload, stored in `uploads/`)
-- [ ] v1.3 — Version history (note_versions table, diff viewer)
-- [ ] v2.0 — Multi-user auth (JWT, bcrypt/argon2, users table)
-- [ ] v2.1 — Sharing & permissions (shares table, public links)
-- [ ] v2.2 — Real-time sync (WebSockets or SSE)
-- [ ] v3.0 — AI features (summarise, auto-tag, semantic search via embeddings)
+- [x] v1.2 — File / image attachments (multer, 5MB, random hex names, ownership access)
+- [x] v2.0 — Multi-user auth & isolation (JWT 7d, bcrypt, first user claims ownerless notes, settings merge)
+- [x] v2.1 — Sharing & public comments (32-byte secure token, zero owner leaks, public visitor comments)
+- [x] v2.2 — PIN Privacy Vault (4-8 digit bcrypt PIN, reveal/unlock, 5 wrong attempts = 5 min lockout)
+- [x] v2.3 — Timely reminders (reminder_at/reminded_at, 30s poller, overdue alerts, Web Notifications API)
+- [x] v3.0 — AI Assistant (Gemini/OpenAI/Anthropic/Mock, summarize, auto-tag, improve text, ask your notes command palette)
+- [x] v3.1 — Production Landing Page & SPA Architecture (Landing at `/`, Board at `/app`, Public share at `/s/:token`)
+- [x] v3.2 — Production deployment & single-process serving (`frontend/dist` served by Express, Dockerfile, Render/Railway guide)

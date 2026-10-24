@@ -74,11 +74,16 @@ router.patch('/reorder', (req, res, next) => {
     }
 
     const updateStmt = db.prepare('UPDATE notes SET position = ?, updated_at = datetime(\'now\') WHERE id = ? AND user_id = ?');
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       for (const u of updates) {
         updateStmt.run(u.position, u.id, req.user.id);
       }
-    })();
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
 
     res.json({ success: true, updated: updates.length });
   } catch (err) {
@@ -174,6 +179,7 @@ router.post('/', (req, res, next) => {
       pinned = 0,
       folder_id = null,
       position = 0,
+      reminder_at = null,
     } = req.body || {};
 
     if (!title || typeof title !== 'string' || !title.trim()) {
@@ -226,11 +232,12 @@ router.post('/', (req, res, next) => {
     const posVal = Number.isInteger(Number(position)) ? Number(position) : 0;
 
     let createdNote;
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       const info = db
         .prepare(
-          `INSERT INTO notes (title, body, tags, color, type, pinned, position, folder_id, user_id, status)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')`
+          `INSERT INTO notes (title, body, tags, color, type, pinned, position, folder_id, user_id, status, reminder_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)`
         )
         .run(
           title.trim(),
@@ -241,13 +248,18 @@ router.post('/', (req, res, next) => {
           pinnedVal,
           posVal,
           cleanFolderId,
-          req.user.id
+          req.user.id,
+          reminder_at ? String(reminder_at) : null
         );
 
       const noteId = Number(info.lastInsertRowid);
       syncNoteTags(db, noteId, cleanTagArray);
       createdNote = db.prepare('SELECT * FROM notes WHERE id = ?').get(noteId);
-    })();
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
 
     res.status(201).json(formatNote(createdNote, cleanTagArray));
   } catch (err) {
@@ -287,6 +299,7 @@ router.put('/:id', validateId, (req, res, next) => {
       pinned = 0,
       folder_id = null,
       position = 0,
+      reminder_at = null,
     } = req.body || {};
 
     if (!title || typeof title !== 'string' || !title.trim()) {
@@ -334,10 +347,11 @@ router.put('/:id', validateId, (req, res, next) => {
     const posVal = Number.isInteger(Number(position)) ? Number(position) : 0;
 
     let updatedNote;
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       db.prepare(
         `UPDATE notes 
-         SET title = ?, body = ?, tags = ?, color = ?, type = ?, pinned = ?, position = ?, folder_id = ?, updated_at = datetime('now')
+         SET title = ?, body = ?, tags = ?, color = ?, type = ?, pinned = ?, position = ?, folder_id = ?, reminder_at = ?, updated_at = datetime('now')
          WHERE id = ? AND user_id = ?`
       ).run(
         title.trim(),
@@ -348,13 +362,18 @@ router.put('/:id', validateId, (req, res, next) => {
         pinnedVal,
         posVal,
         cleanFolderId,
+        reminder_at ? String(reminder_at) : null,
         req.noteId,
         req.user.id
       );
 
       syncNoteTags(db, req.noteId, cleanTagArray);
       updatedNote = db.prepare('SELECT * FROM notes WHERE id = ?').get(req.noteId);
-    })();
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
 
     res.json(formatNote(updatedNote, cleanTagArray));
   } catch (err) {
@@ -372,7 +391,7 @@ router.patch('/:id', validateId, (req, res, next) => {
     const params = [];
     let updatedTags = null;
 
-    const { title, body, tags, color, pinned, status, type, folder_id, position } = req.body || {};
+    const { title, body, tags, color, pinned, status, type, folder_id, position, reminder_at } = req.body || {};
 
     if (title !== undefined) {
       if (typeof title !== 'string' || !title.trim()) {
@@ -465,6 +484,14 @@ router.patch('/:id', validateId, (req, res, next) => {
       params.push(pos);
     }
 
+    if (reminder_at !== undefined) {
+      updates.push('reminder_at = ?');
+      params.push(reminder_at ? String(reminder_at) : null);
+      if (!reminder_at) {
+        updates.push('reminded_at = NULL');
+      }
+    }
+
     if (tags !== undefined) {
       updatedTags = normalizeTags(tags);
       updates.push('tags = ?');
@@ -474,7 +501,8 @@ router.patch('/:id', validateId, (req, res, next) => {
     updates.push("updated_at = datetime('now')");
 
     let resultNote;
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       params.push(req.noteId, req.user.id);
       db.prepare(`UPDATE notes SET ${updates.join(', ')} WHERE id = ? AND user_id = ?`).run(...params);
 
@@ -483,7 +511,11 @@ router.patch('/:id', validateId, (req, res, next) => {
       }
 
       resultNote = db.prepare('SELECT * FROM notes WHERE id = ?').get(req.noteId);
-    })();
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
 
     const finalTags = updatedTags !== null ? updatedTags : getNoteTags(db, req.noteId);
     res.json(formatNote(resultNote, finalTags));

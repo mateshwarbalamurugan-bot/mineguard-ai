@@ -100,11 +100,15 @@ router.delete('/:id', validateFolderId, (req, res, next) => {
     const folder = db.prepare('SELECT id FROM folders WHERE id = ? AND user_id = ?').get(req.folderId, req.user.id);
     if (!folder) return res.status(404).json({ error: 'Folder not found' });
 
-    db.transaction(() => {
-      // "delete moves notes to none"
+    db.exec('BEGIN');
+    try {
       db.prepare('UPDATE notes SET folder_id = NULL WHERE folder_id = ? AND user_id = ?').run(req.folderId, req.user.id);
       db.prepare('DELETE FROM folders WHERE id = ? AND user_id = ?').run(req.folderId, req.user.id);
-    })();
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
 
     res.status(204).end();
   } catch (err) {

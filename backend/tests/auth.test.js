@@ -1,5 +1,5 @@
 'use strict';
-const { describe, it } = require('node:test');
+const { describe, it, after } = require('node:test');
 const assert = require('node:assert/strict');
 const request = require('supertest');
 
@@ -10,6 +10,7 @@ const app = require('../server');
 const db = require('../db');
 
 describe('Auth API & Ownerless Claiming', () => {
+  
   it('First registered user claims ownerless notes', async () => {
     // Insert an ownerless note directly
     db.prepare("INSERT INTO notes (title, body, status) VALUES ('Ownerless Legacy Note', 'Original body', 'active')").run();
