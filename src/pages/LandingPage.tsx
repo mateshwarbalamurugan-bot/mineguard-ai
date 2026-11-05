@@ -145,6 +145,9 @@ export function LandingPage() {
       {/* ══════════════════════ SECTION 1.5 — 3D TECHNICAL SIMULATION ══════════════════════ */}
       <TunnelSimulationSection />
 
+      {/* ══════════════════════ SECTION 1.75 — PROTOTYPE DEMONSTRATION (ROVER SIM) ══════ */}
+      <PrototypeDemoSection />
+
       {/* ══════════════════════ SECTION 2 — ABOUT ══════════════════════ */}
       <AboutSection />
 
@@ -300,6 +303,85 @@ function HeroSection() {
         <ChevronDown size={22} />
         <span>Scroll to explore</span>
       </button>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SECTION 1.75 — PROTOTYPE DEMONSTRATION (ROVER CAD SIMULATION)
+──────────────────────────────────────────────────────────────────── */
+function PrototypeDemoSection() {
+  const { ref, vis } = useVisible(0.05);
+
+  return (
+    <section
+      id="prototype-demo"
+      ref={ref as React.RefObject<HTMLElement>}
+      className="land-section proto-demo-section"
+      aria-label="Prototype Demonstration — Autonomous Rover CAD Simulation"
+    >
+      <div className="proto-demo-bg-grid" />
+      <div className="section-container proto-demo-container">
+        {/* Header */}
+        <div className={`section-header ${vis ? 'vis-in' : 'vis-out'}`}>
+          <span className="section-eyebrow">
+            <span className="eye-rule" />PROTOTYPE DEMONSTRATION<span className="eye-rule" />
+          </span>
+          <h2 className="section-h2">
+            Autonomous Rover<br /><span className="h2-accent">CAD Simulation</span>
+          </h2>
+          <p className="section-lead">
+            Interact with the full holographic CAD model of the MineGuard rover.
+            Drag to orbit, click any subsystem to inspect its specs, and use the
+            Explode slider to reveal internal hardware architecture.
+          </p>
+        </div>
+
+        {/* Simulation card */}
+        <div className={`proto-demo-card ${vis ? 'vis-in' : 'vis-out'}`}>
+          {/* Card header bar */}
+          <div className="proto-demo-card-head">
+            <div className="head-left">
+              <span className="section-title-badge">
+                <Cpu size={15} className="text-cyan glow-cyan" aria-hidden="true" />
+                <strong>AUTONOMOUS ROVER SIMULATION</strong>
+              </span>
+              <span className="mine-depth-live">
+                <span className="live-dot" />
+                STARK HOLOGRAPHIC CAD · 9 HARDWARE SUBSYSTEMS
+              </span>
+            </div>
+            <div className="head-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                className="land-cta-btn-secondary"
+                style={{ fontSize: '11px', padding: '4px 12px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                onClick={() => { sfx.playClick(); scrollTo('exploded-view'); }}
+              >
+                <Layers size={13} aria-hidden="true" />
+                <span>Full CAD View</span>
+                <ArrowRight size={12} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          {/* 3D Rover viewport */}
+          <div className="proto-demo-viewport">
+            <RoverCadSimulation height={540} />
+          </div>
+
+          {/* Card footer */}
+          <div className="proto-demo-card-foot">
+            <span className="foot-pill pill-cyan">
+              <span className="pill-dot cyan" />
+              LiDAR 360° Scanning Active · Thermal Telemetry Online
+            </span>
+            <span className="proto-demo-hint">
+              Drag to orbit · Click any part to inspect specs · Drag the Explode slider to view hardware internals
+            </span>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

@@ -9,7 +9,6 @@ import { seedScenarios } from '../data/seed';
 import { freshSensorCount, freshnessPercent, sortAlerts } from '../simulation/scenarioEngine';
 import { MetricCard, SectionHeader } from '../components/Primitives';
 import { ProvenanceBadge } from '../components/Badges';
-import { RoverCadSimulation } from '../components/RoverCadSimulation';
 import { AlertQueue } from '../components/AlertQueue';
 import { ZoneDrawer } from '../components/ZoneDrawer';
 import { GuidedDemoModal } from '../components/GuidedDemoModal';
@@ -220,46 +219,6 @@ export function CommandCentrePage() {
           </div>
           <ArrowRight size={15} className="quick-access-arrow" />
         </Link>
-      </section>
-
-      {/* 3. HERO SHOWCASE: Autonomous Inspection Rover CAD Simulation */}
-      <section className="mine-depth-card hero-rover-section" aria-label="Autonomous Rover Inspection CAD Simulation">
-        <div className="mine-depth-card-head">
-          <div className="head-left">
-            <span className="section-title-badge">
-              <Cpu size={15} className="text-cyan glow-cyan" aria-hidden="true" />
-              <strong>AUTONOMOUS ROVER SIMULATION</strong>
-            </span>
-            <span className="mine-depth-live">
-              <span className="live-dot" />
-              STARK HOLOGRAPHIC CAD · 9 HARDWARE SUBSYSTEMS
-            </span>
-          </div>
-
-          <div className="head-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Link to="/map" className="button button-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11px', padding: '4px 10px' }}>
-              <Layers size={13} aria-hidden="true" />
-              <span>Open 3D Mine Map</span>
-              <ArrowRight size={12} aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="mine-depth-viewport" style={{ minHeight: '520px' }}>
-          <RoverCadSimulation height={540} />
-        </div>
-
-        <div className="mine-depth-card-foot">
-          <div className="foot-status-pills">
-            <span className="foot-pill pill-cyan">
-              <span className="pill-dot cyan" />
-              LiDAR 360° Scanning Active · Thermal Telemetry Online
-            </span>
-            <span className="foot-caption">
-              Drag to orbit · Click any part to inspect specs · Drag the Explode slider to view hardware internals
-            </span>
-          </div>
-        </div>
       </section>
 
       {/* 4. Test Scenario Switcher */}

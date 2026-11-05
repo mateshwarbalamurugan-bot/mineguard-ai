@@ -1919,3 +1919,88 @@
   .tunnel-sim-bar { padding: 8px 12px; }
   .tunnel-sim-title { font-size: 10px; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════
+   PROTOTYPE DEMONSTRATION SECTION (Rover CAD Simulation)
+══════════════════════════════════════════════════════════════ */
+.proto-demo-section {
+  position: relative;
+  padding: 80px 0 60px;
+  overflow: hidden;
+}
+
+.proto-demo-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.proto-demo-container {
+  position: relative;
+  z-index: 1;
+}
+
+.proto-demo-card {
+  position: relative;
+  border: 1px solid var(--border-subtle, rgba(0, 243, 255, 0.15));
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(10, 12, 18, 0.7);
+  backdrop-filter: blur(8px);
+  margin-top: 32px;
+  animation: none;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.proto-demo-card.vis-out {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.proto-demo-card.vis-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.proto-demo-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-subtle, rgba(0, 243, 255, 0.1));
+  background: rgba(0, 243, 255, 0.03);
+}
+
+.proto-demo-viewport {
+  min-height: 520px;
+  position: relative;
+}
+
+.proto-demo-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-subtle, rgba(0, 243, 255, 0.1));
+  background: rgba(0, 243, 255, 0.02);
+  flex-wrap: wrap;
+}
+
+.proto-demo-hint {
+  font-size: 10px;
+  font-family: var(--land-mono, 'JetBrains Mono', monospace);
+  color: var(--text-dim, rgba(255, 255, 255, 0.35));
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .proto-demo-section { padding: 48px 0 40px; }
+  .proto-demo-viewport { min-height: 360px; }
+  .proto-demo-card-foot { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
