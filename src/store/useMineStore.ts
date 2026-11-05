@@ -34,12 +34,28 @@ const seedIntegrations: IntegrationRecord[] = [
   { id: 'telemetry', name: 'Mine telemetry adapter', status: 'Not connected', note: 'No live mine data connection in this demo.' },
   { id: 'map-upload', name: 'Map upload', status: 'Not connected', note: 'Local demonstration upload only.' },
 ];
+const getInitialDarkMode = () => {
+  if (typeof window === 'undefined') return true;
+  try {
+    const saved = localStorage.getItem('mineguard-demo-v1');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (typeof parsed?.state?.darkMode === 'boolean') {
+        return parsed.state.darkMode;
+      }
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } catch {
+    return false;
+  }
+};
+
 const initialState = () => ({
   mine: structuredClone(mine), expectedSensors, scenarios: structuredClone(seedScenarios), role: 'Mine Manager' as Role,
   scenario: 'normal' as ScenarioId, scenarioHistory: ['normal'] as ScenarioId[], zones: structuredClone(seedZones), sensors: structuredClone(seedSensors),
   readings: structuredClone(seedReadings), alerts: structuredClone(seedAlerts), workers: structuredClone(seedWorkers), checkpoints: structuredClone(seedCheckpoints),
   inspections: structuredClone(seedInspections), hazards: structuredClone(seedHazards), scans: structuredClone(seedScans), vendors: structuredClone(vendors),
-  sources: structuredClone(sources), integrations: structuredClone(seedIntegrations), audit: structuredClone(seedAudit), darkMode: true, reducedMotion: false,
+  sources: structuredClone(sources), integrations: structuredClone(seedIntegrations), audit: structuredClone(seedAudit), darkMode: getInitialDarkMode(), reducedMotion: false,
   notificationMuted: false, sourceFilter: '', heroCollapsed: false, presenterMode: false, tourOpen: false, tourStep: 0, drillActive: false, activeZoneId: null,
 });
 const seedInspectionIds = new Set(seedInspections.map((inspection) => inspection.id));
@@ -59,7 +75,16 @@ export const useMineStore = create<MineState>()(persist((set, get) => ({
     }).concat(get().inspections.filter((inspection) => !seedInspectionIds.has(inspection.id)));
     set({ ...generated, inspections, alerts, scenario, scenarioHistory: [...get().scenarioHistory, scenario], activeZoneId: scenario === 'sensor-failure' ? 'tunnel-b' : null, audit: [...get().audit, freshAudit('Scenario changed', `Demo scenario: ${scenario}`)] });
   },
-  setDarkMode: (darkMode) => set({ darkMode }), setReducedMotion: (reducedMotion) => set({ reducedMotion }),
+  setDarkMode: (darkMode) => {
+    if (typeof document !== 'undefined') {
+      if (darkMode) {
+        document.documentElement.classList.add('theme-dark');
+      } else {
+        document.documentElement.classList.remove('theme-dark');
+      }
+    }
+    set({ darkMode });
+  }, setReducedMotion: (reducedMotion) => set({ reducedMotion }),
   setNotificationMuted: (notificationMuted) => set({ notificationMuted }), setSourceFilter: (sourceFilter) => set({ sourceFilter }),
   setHeroCollapsed: (heroCollapsed) => set({ heroCollapsed }), setPresenterMode: (presenterMode) => set({ presenterMode }),
   setTourOpen: (tourOpen) => set({ tourOpen, tourStep: tourOpen ? 0 : get().tourStep }), setTourStep: (tourStep) => set({ tourStep }), setDrillActive: (drillActive) => set({ drillActive }),

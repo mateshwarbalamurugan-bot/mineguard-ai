@@ -81,7 +81,6 @@ export function CommandCentrePage() {
 
   const freshCount = freshSensorCount(sensors);
   const freshness = freshnessPercent(sensors, expected);
-  const taskAttention = inspections.filter((i) => i.status === 'Queued' || i.status === 'Assigned').length;
   const undergroundWorkers = workers.filter((w) => w.exitStatus !== 'verified-out').length;
   const overdueCheckpoints = workers.filter((w) => w.checkpointOverdue).length;
 
@@ -154,6 +153,13 @@ export function CommandCentrePage() {
           tone={activeAlerts.length > 0 ? 'alert' : 'neutral'}
         />
         <MetricCard
+          label="Autonomous Robots"
+          value="2 / 4"
+          note="Active inspection sweeps in progress"
+          icon={<Cpu size={16} />}
+          tone="teal"
+        />
+        <MetricCard
           label="Environmental Sensors"
           value={`${freshCount} / ${sensors.length}`}
           note={`${freshness}% reporting normally`}
@@ -167,13 +173,53 @@ export function CommandCentrePage() {
           icon={<Users size={16} />}
           tone={overdueCheckpoints > 0 ? 'alert' : 'neutral'}
         />
-        <MetricCard
-          label="Pending Inspections"
-          value={taskAttention}
-          note="Queued verification tasks"
-          icon={<TriangleAlert size={16} />}
-          tone="warning"
-        />
+      </section>
+
+      {/* Quick Access Navigation Bar (Phase 5D) */}
+      <section className="command-quick-access" aria-label="Quick Access Workspaces">
+        <Link to="/monitoring" className="quick-access-card">
+          <div className="quick-access-icon">
+            <Activity size={20} />
+          </div>
+          <div className="quick-access-content">
+            <strong>Live Monitoring</strong>
+            <span>Atmospheric gas, airflow & water levels</span>
+          </div>
+          <ArrowRight size={15} className="quick-access-arrow" />
+        </Link>
+
+        <Link to="/robotics" className="quick-access-card">
+          <div className="quick-access-icon icon-cyan">
+            <Cpu size={20} />
+          </div>
+          <div className="quick-access-content">
+            <strong>Robotics Fleet</strong>
+            <span>Autonomous rovers, drones & 3D CAD</span>
+          </div>
+          <ArrowRight size={15} className="quick-access-arrow" />
+        </Link>
+
+        <Link to="/hazards" className="quick-access-card">
+          <div className="quick-access-icon icon-orange">
+            <TriangleAlert size={20} />
+          </div>
+          <div className="quick-access-content">
+            <strong>Hazard Detection</strong>
+            <span>{activeAlerts.length} unresolved safety alerts</span>
+          </div>
+          <ArrowRight size={15} className="quick-access-arrow" />
+        </Link>
+
+        <Link to="/map" className="quick-access-card">
+          <div className="quick-access-icon icon-blue">
+            <Layers size={20} />
+          </div>
+          <div className="quick-access-content">
+            <strong>Underground Map</strong>
+            <span>3D twin & depth levels (-120m to -360m)</span>
+          </div>
+          <ArrowRight size={15} className="quick-access-arrow" />
+        </Link>
       </section>
 
       {/* 3. HERO SHOWCASE: Autonomous Inspection Rover CAD Simulation */}
