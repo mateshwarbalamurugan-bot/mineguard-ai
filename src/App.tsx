@@ -38,6 +38,7 @@ function RoutedApp() {
       <Route path="/map" element={<WorkspacePage />} />
       <Route path="/robotics" element={<RoboticsPage />} />
       <Route path="/hazards" element={<HazardsPage />} />
+      <Route path="/incidents" element={<WorkspacePage />} />
       <Route path="/analytics" element={<AnalyticsPage />} />
       <Route path="/reports" element={<WorkspacePage />} />
       <Route path="/settings" element={<WorkspacePage />} />

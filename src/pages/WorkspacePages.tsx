@@ -60,6 +60,7 @@ export function WorkspacePage() {
     case '/scans': return <ScansPage/>;
     case '/confidence': return <ConfidencePage/>;
     case '/inspections': return <InspectionsPage/>;
+    case '/incidents': return <InspectionsPage/>;
     case '/workforce': return <WorkforcePage/>;
     case '/copilot': return <CopilotPage/>;
     case '/vendors': return <VendorsPage/>;
@@ -230,7 +231,7 @@ function InspectionsPage() {
   const rows = [...inspections].filter((item) => filter === 'All' || (filter === 'Open' ? item.status !== 'Complete' : item.status === filter)).sort((a, b) => b.score - a.score);
   function createTask() { const id = createInspection(newZone, newTask.trim() || 'New verification task'); if (id) setNewTask('Verify zone information'); }
   return <div className="page-stack">
-    <PageTitle eyebrow="ACTION QUEUE" title="Inspection Priority" detail="Review explainable inspection recommendations, assign work and record completion."/>
+    <PageTitle eyebrow="SAFETY & INCIDENTS" title="Incident Management & Inspections" detail="Prioritize safety incidents, dispatch verification work orders and record resolution status."/>
     <SimNote>Priority values are transparent demonstration scores, not predictions of collapse or hazard.</SimNote>
     <div className="work-three-col"><MetricCard label="Open tasks" value={inspections.filter((i) => i.status !== 'Complete').length} note="Requires ownership or follow-up" icon={<ClipboardCheck size={15}/>}/><MetricCard label="Highest priority" value={Math.max(0, ...inspections.filter((i) => i.status !== 'Complete').map((i) => i.score))} note="Rule-based demonstration score" tone="warning" icon={<AlertTriangle size={15}/>}/><MetricCard label="Completed" value={inspections.filter((i) => i.status === 'Complete').length} note="Recorded in this demo session" tone="teal" icon={<CheckCircle2 size={15}/>}/></div>
     <Panel title="Create an inspection task" aside="Local demo workflow"><div className="inline-form"><label>Mine zone<select value={newZone} onChange={(e) => setNewZone(e.target.value)}>{zones.map((z) => <option key={z.id} value={z.id}>{z.name}</option>)}</select></label><label className="grow-field">Verification needed<input value={newTask} onChange={(e) => setNewTask(e.target.value)} placeholder="Describe the check"/></label><button className="button button-primary" onClick={createTask}>Create task</button></div></Panel>

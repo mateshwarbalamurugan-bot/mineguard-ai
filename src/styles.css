@@ -3805,3 +3805,523 @@ html[data-motion="reduced"] .pulse-dot { animation: none !important; }
   color: #3B82F6;
   background: #162032;
 }
+
+/* ========================================================================== */
+/* HAZE DASHBOARD LAYOUT & COLLAPSIBLE SIDEBAR SPECIFICATION                  */
+/* ========================================================================== */
+
+.sidebar {
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-collapsed {
+  width: 72px !important;
+}
+
+.sidebar-is-collapsed .workspace {
+  margin-left: 72px !important;
+}
+
+.sidebar-collapsed .brand-lockup {
+  justify-content: center;
+  padding: 16px 8px;
+}
+
+.sidebar-collapsed .desktop-collapse-btn {
+  margin: 0;
+}
+
+.sidebar-collapsed .nav-item {
+  justify-content: center;
+  padding: 9px;
+}
+
+.sidebar-collapsed .nav-section-caption {
+  text-align: center;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+}
+
+.desktop-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  color: #b4c7ea;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.desktop-collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.desktop-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.desktop-sidebar-toggle:hover {
+  color: var(--ink);
+  border-color: var(--navy);
+}
+
+@media (max-width: 768px) {
+  .desktop-collapse-btn,
+  .desktop-sidebar-toggle {
+    display: none;
+  }
+}
+
+.nav-section-divider {
+  margin-top: 14px;
+  padding-top: 8px;
+}
+
+.nav-count-mini {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  min-width: 14px;
+  height: 14px;
+  font-size: 8px;
+  line-height: 14px;
+  padding: 0 3px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.breadcrumb-root {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.breadcrumb-separator {
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.breadcrumb-section {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.breadcrumb-current {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.header-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.dot-green {
+  background: #15803d;
+  box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.2);
+}
+
+.dot-red {
+  background: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25);
+  animation: pulse-red 1.2s infinite;
+}
+
+/* Command Center Main Visualizations 2x2 Grid */
+.command-visualizations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 4px;
+}
+
+@media (max-width: 1024px) {
+  .command-visualizations-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.command-card-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.card-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
+.card-panel-head h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.card-panel-head p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.compact-action {
+  font-size: 11px;
+  padding: 4px 8px;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.ops-overview-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ops-spatial-sectors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .ops-spatial-sectors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ops-sector-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card-subtle, #F8F8F4);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.ops-sector-chip:hover {
+  border-color: var(--navy);
+  transform: translateY(-1px);
+}
+
+.ops-sector-chip.sector-active {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 1px var(--navy);
+}
+
+.ops-sector-chip.sector-alert {
+  border-color: rgba(220, 38, 38, 0.4);
+  background: #fff8f8;
+}
+
+.sector-chip-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sector-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sector-dot.state-known { background: #15803d; }
+.sector-dot.state-uncertain { background: #d97706; }
+.sector-dot.state-alert { background: #dc2626; }
+.sector-dot.state-unknown { background: var(--muted); }
+
+.sector-chip-top strong {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sector-chip-foot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--muted);
+}
+
+.ops-depth-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.fleet-status-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fleet-status-breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.fleet-status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card-subtle, #F8F8F4);
+  text-align: center;
+  gap: 4px;
+}
+
+.fleet-status-badge {
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+.fleet-status-item strong {
+  font-size: 20px;
+  font-family: var(--mono);
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.fleet-status-item small {
+  font-size: 9px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.fleet-quick-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.fleet-telemetry-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.fleet-telemetry-pill strong {
+  color: var(--ink);
+}
+
+.hazard-distribution-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.severity-bar-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.severity-dist-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sev-dist-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sev-dist-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.sev-dist-val {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sev-dist-val strong {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--muted);
+  width: 18px;
+}
+
+.sev-progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.sev-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.fill-critical { background: #ef4444; }
+.fill-high { background: #f97316; }
+.fill-medium { background: #eab308; }
+.fill-low { background: #3b82f6; }
+
+.activity-feed-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.activity-event-row {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+}
+
+.activity-time-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.activity-content strong {
+  display: block;
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.activity-content span {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-actor {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.activity-feed-foot {
+  padding-top: 4px;
+}
+
+/* Dark Theme Overrides for Haze Redesign */
+.theme-dark .command-card-panel {
+  background: #111827;
+  border-color: #1F2C44;
+}
+
+.theme-dark .ops-sector-chip,
+.theme-dark .fleet-status-item {
+  background: #162032;
+  border-color: #1F2C44;
+}
+
+.theme-dark .ops-sector-chip.sector-alert {
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.4);
+}
+
+.theme-dark .desktop-sidebar-toggle {
+  background: #111827;
+  border-color: #1F2C44;
+  color: #94A3B8;
+}
+
+.theme-dark .desktop-sidebar-toggle:hover {
+  color: #F1F5F9;
+  border-color: #3B82F6;
+}
+
+.theme-dark .header-status-chip {
+  background: #111827;
+  border-color: #1F2C44;
+  color: #F1F5F9;
+}
+
+.theme-dark .breadcrumb-current {
+  color: #F1F5F9;
+}
