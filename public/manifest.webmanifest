@@ -1,0 +1,13 @@
+{
+  "name": "MINEGUARD AI — Intelligent Underground Mine Safety System",
+  "short_name": "MineGuard AI",
+  "description": "Offline simulated underground mine safety and intelligence demonstration.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f8fb",
+  "theme_color": "#0b1220",
+  "icons": [
+    { "src": "/mineguard-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

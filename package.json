@@ -1,14 +1,33 @@
 {
-  "name": "notes-board-root",
+  "name": "mineguard-ai",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
-    "build": "npm run build --prefix frontend",
-    "start": "node backend/server.js",
-    "test": "npm test --prefix backend"
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@hugeicons/core-free-icons": "^4.4.0",
+    "@hugeicons/react": "^1.1.10",
+    "@vitejs/plugin-react": "^5.0.4",
+    "lucide-react": "^0.468.0",
+    "motion": "^14.9.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.7.0",
+    "three": "^0.181.0",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "concurrently": "^9.0.0"
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.7",
+    "@types/three": "^0.181.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2"
   }
 }

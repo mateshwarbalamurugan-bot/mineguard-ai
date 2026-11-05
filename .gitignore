@@ -1,7 +1,7 @@
 node_modules/
-*.db
-*.db-shm
-*.db-wal
-uploads/
-.env
 dist/
+.vite/
+*.tsbuildinfo
+.DS_Store
+_notes_backup/
+.vercel/

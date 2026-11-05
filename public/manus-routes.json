@@ -1,0 +1,19 @@
+{
+  "routes": [
+    { "path": "/", "title": "Command Centre" },
+    { "path": "/monitoring", "title": "Live Monitoring" },
+    { "path": "/map", "title": "2D/3D Mine Map" },
+    { "path": "/scans", "title": "Scans" },
+    { "path": "/confidence", "title": "Knowledge Confidence" },
+    { "path": "/inspections", "title": "Inspection Priority" },
+    { "path": "/workforce", "title": "Workforce & Emergency" },
+    { "path": "/copilot", "title": "Mining Copilot" },
+    { "path": "/vendors", "title": "Technology & Vendors" },
+    { "path": "/advisor", "title": "Technology Advisor" },
+    { "path": "/radar", "title": "Technology Radar" },
+    { "path": "/reports", "title": "Reports" },
+    { "path": "/settings", "title": "Integrations & Settings" },
+    { "path": "/sources", "title": "Source Register" },
+    { "path": "/about", "title": "About MineGuard" }
+  ]
+}
