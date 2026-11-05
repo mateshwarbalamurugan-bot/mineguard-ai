@@ -7,6 +7,7 @@ import {
   Volume2, VolumeX, Wrench, RotateCcw, Menu, X
 } from 'lucide-react';
 import { RoverCadSimulation, ROVER_COMPONENTS, sfx } from '../components/RoverCadSimulation';
+import { TunnelSimulationSection } from '../components/TunnelSimulationSection';
 
 /* ─── Smooth-scroll helper ─── */
 function scrollTo(id: string) {
@@ -140,6 +141,9 @@ export function LandingPage() {
 
       {/* ══════════════════════ SECTION 1 — HERO ══════════════════════ */}
       <HeroSection />
+
+      {/* ══════════════════════ SECTION 1.5 — 3D TECHNICAL SIMULATION ══════════════════════ */}
+      <TunnelSimulationSection />
 
       {/* ══════════════════════ SECTION 2 — ABOUT ══════════════════════ */}
       <AboutSection />
